@@ -55,8 +55,8 @@
 
 #pragma region Variables
 // Get the total size of the Computer's RAM. This equates to ~65.5kb.
-#define BANK_SIZE 0xFF              // 256 (0xFF) banks
-#define NUM_BANKS 0xFF              // 256 (0xFF) bytes per bank
+#define BANK_SIZE 0xFF              // 256 (0xFF) bytes per bank
+#define NUM_BANKS 0xFF              // 256 (0xFF) banks
 
 // For easier understanding, define byte and word instead of using their C identifiers.
 typedef unsigned char byte;
