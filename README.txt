@@ -1,6 +1,5 @@
 IMPORTANT NOTE: Nothing is complete yet. The instruction set is missing two instructions, the assembler is missing some abstractions, and the emulator
-is missing input and output. However, all of them are functional. The assembler provides support for labels, and comments but otherwise you're coding right 
-on top of binary at a 1:1 scale.
+is missing input and output. However, all of them are functional.
 
 DATE OF THIS REVISION: 01/04/2024
 EMULATOR VERSION: ALPHA 6
