@@ -96,7 +96,7 @@ int initSDL() {
     return 0;
 }
 
-// This function gets an RGB color value based on its input and position handed into SDL.
+// This function gets an 8-bit RGB color value based on an 8-bit input
 Uint8 extractBits(Uint8 value, int position) {
     return (value >> (position * 2)) & 0b11;
 }
@@ -138,7 +138,7 @@ void DrawToScreen(){
     int y = 0;
 
     for(int i = 0; i < 4; i++){
-        // Iterate five times
+        // Iterate four times
         for(int j = 0; j < 256; j++){
             // Iterate 256 times. That makes 4 whole banks of memory to be written to the screen.
 
