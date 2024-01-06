@@ -3,8 +3,8 @@ is missing input and output. However, all of them are functional. The assembler 
 on top of binary at a 1:1 scale.
 
 DATE OF THIS REVISION: 01/04/2024
-EMULATOR VERSION: ALPHA 5
-ASSEMBLER VERSION: BETA 1
+EMULATOR VERSION: ALPHA 6
+ASSEMBLER VERSION: BETA 2
 
 Required Knowledge: Basic understanding of computer architectures and assembly.
 
