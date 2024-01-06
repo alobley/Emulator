@@ -832,7 +832,7 @@ void ExecuteProgram(int programLength){
             // Check if there was an SDL event
             if (e.type == SDL_QUIT) {
                 // If it was the command to exit, stop the program.
-                exit(0);
+                return;
             }
         }
         DrawToScreen();
@@ -873,7 +873,6 @@ int main(int argc, char* argv[]){
     closeSDL();
 
     // Print the values of the registers and the program's memory for debug 
-    // (deprecated but still functional if you don't have an infinite loop in your program)
     PrintRegisters();
     PrintRAMDebug(arrayLen);
 
