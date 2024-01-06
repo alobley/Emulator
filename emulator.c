@@ -25,7 +25,7 @@
  * 01/04/23   AND    Created the README file which contains extensive documentation and some example assembly programs. Greatly updated the assembler, added
  *                   some new instructions to replace old ones, and made jumps work properly.
  *                   Added and memory mapped an SDL-based virtual screen which does function properly. The user can write 16x16 squares to the screen
- *                   at a varying grayscale based on the location in RAM. VRAM is the last 1kb or so of RAM.
+ *                   with 8-bit colors based on the location in RAM. VRAM is the last 1kb or so of RAM.
  */
 
 /* 
