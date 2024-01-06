@@ -25,7 +25,10 @@
  * 01/04/23   AND    Created the README file which contains extensive documentation and some example assembly programs. Greatly updated the assembler, added
  *                   some new instructions to replace old ones, and made jumps work properly.
  *                   Added and memory mapped an SDL-based virtual screen which does function properly. The user can write 16x16 squares to the screen
- *                   with 8-bit colors based on the location in RAM. VRAM is the last 1kb or so of RAM.
+ *                   at a varying grayscale based on the location in RAM. VRAM is the last 1kb or so of RAM.
+ * 
+ * 01/06/23   AND    Added the ability to scan for keyboard input and memory mapped the keyboard to a byte in RAM. With this, the emulator is essentially
+ *                   complete.
  */
 
 /* 
@@ -55,8 +58,8 @@
 
 #pragma region Variables
 // Get the total size of the Computer's RAM. This equates to ~65.5kb.
-#define BANK_SIZE 0xFF              // 256 (0xFF) bytes per bank
-#define NUM_BANKS 0xFF              // 256 (0xFF) banks
+#define BANK_SIZE 0xFF              // 256 (0xFF) banks
+#define NUM_BANKS 0xFF              // 256 (0xFF) bytes per bank
 
 // For easier understanding, define byte and word instead of using their C identifiers.
 typedef unsigned char byte;
@@ -96,7 +99,7 @@ int initSDL() {
     return 0;
 }
 
-// This function gets an 8-bit RGB color value based on an 8-bit input
+// This function gets an RGB color value based on its input and position handed into SDL.
 Uint8 extractBits(Uint8 value, int position) {
     return (value >> (position * 2)) & 0b11;
 }
@@ -138,7 +141,7 @@ void DrawToScreen(){
     int y = 0;
 
     for(int i = 0; i < 4; i++){
-        // Iterate four times
+        // Iterate five times
         for(int j = 0; j < 256; j++){
             // Iterate 256 times. That makes 4 whole banks of memory to be written to the screen.
 
@@ -779,10 +782,6 @@ void ExecuteInstruction(byte opcode, byte operand){
 }
 #pragma endregion Execution
 
-#pragma region Keyboard
-byte buffer = 0x00;
-#pragma endregion Keyboard
-
 #pragma region Run
 int quit = 0;
 SDL_Event e;
@@ -833,6 +832,13 @@ void ExecuteProgram(int programLength){
             if (e.type == SDL_QUIT) {
                 // If it was the command to exit, stop the program.
                 return;
+            } else if (e.type == SDL_KEYDOWN){
+                // Check for keyboard input
+                SDL_KeyCode keyPressed = e.key.keysym.sym;
+
+                // Store it in the last address in the last bank before VRAM. In assembly, you'll have to use its numeric value. For some reason, the next
+                // Address is read by VRAM.
+                RAM[250].address[254] = keyPressed;
             }
         }
         DrawToScreen();
@@ -850,6 +856,19 @@ int main(int argc, char* argv[]){
     byte *ROM;
     word file_size;
     file = fopen("program.bin", "rb");
+
+    // If the file does not exist, tell the user and gracefully exit
+    if(file == NULL){
+        fprintf(stderr, "Error opening file.\n");
+        return 1;
+    }
+
+    if (ROM == NULL) {
+        fprintf(stderr, "Error allocating memory for ROM.\n");
+        fclose(file);
+        return 1;
+    }
+
 
     // Look for the file
     fseek(file, 0, SEEK_END);
