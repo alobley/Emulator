@@ -1,8 +1,5 @@
-IMPORTANT NOTE: Nothing is complete yet. The instruction set is missing two instructions, the assembler is missing some abstractions, and the emulator
-is missing input and output. However, all of them are functional.
-
-DATE OF THIS REVISION: 01/04/2024
-EMULATOR VERSION: ALPHA 6
+DATE OF THIS REVISION: 01/06/2024
+EMULATOR VERSION: BETA 1
 ASSEMBLER VERSION: BETA 2
 
 Required Knowledge: Basic understanding of computer architectures and assembly.
@@ -34,6 +31,8 @@ $$ Can be used as the current bank index and can be an operand. Can be pushed on
 
 To call a function and return, you can PUSHI $ and $$, then at the end of the function do POP, then do SOR, B, and then do POP, then JMPR, B.
 
+The assembler currently doesn't support ASCII characters. You'll have to use their numeric value.
+
 IMPORTANT: The assembler parses lines by commas. The correct syntax is: [opcode], [operand], [operand] or [opcode], [operand].
 
 ---------- COMPUTER DETAILS ----------
@@ -52,17 +51,13 @@ The emulator is written in C. It has a screen output and planned keyboard input.
 The CPU only supports direct addressing. There is only direct addressing and jumping.
 
 In terms of hardware and software, there is just the CPU and RAM. There is no firmware, no graphics hardware, no BIOS. When programming, it's just you
-and the CPU. In the future, there will (hopefully) be memory mapped I/O to a keyboard and screen.
+and the CPU. The keyboard is memory mapped to bank 250 address 254, and VRAM is all banks from 251-255.
 
 If the emulator encounters an error, it will provide you with a classic C error message and stop the program. First check your program for bugs, and if
 you can't find any, report a bug and provide me with both the error message and your program.
 
 ---------- FUTURE GOALS ----------
-- Implement a timer in the emulator for more realistic clock speed
-- Add more abstractions to the assembler, such as passing two operands on the same line as the instruction. (complete)
-- Add a graphics library to the emulator and memory map it to the computer's virtual RAM for visual output. (complete)
-- Add IN/OUT instructions for communicating with external hardware
-- Add a keyboard library to the emulator for keyboard input
+- Implement a timer in the emulator for a PIT
 - Add syntax highlighting for the assembly code in Visual Studio
 - Name the Computer/CPU
 - Name the assembly language
