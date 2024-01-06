@@ -64,8 +64,8 @@ def AssembleInstruction(instruction, operand):
     global bankOffset
     global memoryOffset
 
-    # Clear leading and trailing whitespace around the instruction
-    instruction = instruction.strip()
+    # Clear leading and trailing whitespace around the instruction and make it uppercase in case a label was detected
+    instruction = instruction.upper().strip()
 
     if instruction in instructions:
         # If the instruction is in the instructions dictionary, add it.
