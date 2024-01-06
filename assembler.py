@@ -8,6 +8,14 @@
 #          instructions with 2 operands are 4 bytes. That's because each instruction is 16 bits.
 # Register vs. Immediate operations - likely only a few of them and in later versions, but for almost every instruction there is both a register and an
 #                                     immediate version. For example, lda and cpy will be separate, but addi and addr will be the same.
+#
+# To Add:
+# - .equ values
+# - Checks for overflow errors
+# - (Maybe) call/ret
+#
+# What I won't add:
+# - Variables (use P)
 
 import struct
 
@@ -25,17 +33,13 @@ registerIDs = {"A": 0x01, "B": 0x02, "C": 0x03, "D": 0x04, "BI": 0x05, "P": 0x06
 
 labels = {}
 
-# To be implemented
-operandOne = 0
-operandTwo = 0
-numOperands = 0
-
-# Currently implemented
+# Set the global variables
 currentLine = 0
 assembledCode = []
 inputString = ""
 bankOffset = 0
 memoryOffset = 0
+originalChar = ""
 
 # This function gets the locations of all the labels in the code.
 def GetLabels(lines):
@@ -49,12 +53,20 @@ def GetLabels(lines):
             # identify it as a new label when jumping.
             labels[line[:-1]] = [bankOffset, memoryOffset]
         if ";" in line:
+            # If there is a comment on the line, remove and ignore it.
             line = line.split(";")[0].strip()
         if line.strip() and not line[0] == "_" and not line[-1] == ":":
-            if len(line.split(',')) > 2:
+            # If the line exists and is not a label, increase the memory offset
+            if len(line.split(',')) == 3:
+                # If there are two operands, increase the memory offset by 4
                 memoryOffset += 4
-            else:
+            elif len(line.split(',')) <= 2:
+                # Otherwise, increase it by 2
                 memoryOffset += 2
+            else:
+                # If there are more than two operands, return an error.
+                print("Error: too many operands on line: " + currentLine + ". Cannot assemble.")
+                exit()
     memoryOffset = 0
 
 # This function assembles the given opcode and operand and turns them into binary code
@@ -75,7 +87,7 @@ def AssembleInstruction(instruction, operand):
             memoryOffset = 0
 
 
-        if str(operand).isnumeric():
+        if str(operand).isnumeric() and int(operand) < 256:
             # If the operand is a number, make it an integer and add it along with its instruction to two bytes
             memoryOffset += 2
             return struct.pack('BB', instructions[instruction], int(operand))
@@ -94,6 +106,11 @@ def AssembleInstruction(instruction, operand):
                 print("Error is on line: " + str(currentLine))
                 print("Did you mistype it?")
                 exit()
+        elif ((operand[0] == "'" and operand[-1] == "'") or (operand[0] == '''"''' and operand[-1] == '''"''')) and len(operand) < 4:
+            # If there is a character as the operand, turn it into its integer ASCII value and pass it as an integer value. Only supports lowercase.
+            # Only supports one character. If you try more, it will result in an error.
+            operand = ord(operand[1].lower())
+            return struct.pack('BB', instructions[instruction], operand)
 
         # Is the operand a register?
         elif operand in registerIDs:
@@ -150,7 +167,7 @@ def ParseInstruction(line):
 
         # Split the line based on commas and make it all uppercase as long as there is no label call. This allows for case sensitive labels.
         if not "_" in line:
-            tokens = line.upper().strip().split(',')
+            tokens = line.strip().split(',')
         else:
             tokens = line.strip().split(',')
 
