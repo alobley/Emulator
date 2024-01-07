@@ -1,4 +1,4 @@
-; Example program: put a line on the top and bottom of the screen
+; Example program: Wait for the user to press D, then put a line on the top and bottom of the screen
 _start:
     LDI, A, 6       ; Load 6 into A
 
@@ -14,8 +14,16 @@ _start:
 
     LDI, B, 251     ; Load 251 into B
 
-    LDI, P, 11       ; Set P to 11
+    BSWCHI, 250     ; Go to bank 250
 
+; Check if D has been pressed
+_checkInput:
+    LOADI, D, 254   ; Load the value at address 255 into A
+    CMPI, D, 'd'    ; Is 'd' in D?
+    JNEI, _checkInput ; If not, repeat the loop
+
+    ; If so, continue
+    LDI, P, 11      ; Set P to 11
     BSWCHR, B       ; Go to the 251st RAM bank (start of VRAM)
 
 ; The loop label. Tells the assembler where to jump to so that I don't have to calculate it myself.
