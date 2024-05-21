@@ -31,8 +31,6 @@ $$ Can be used as the current bank index and can be an operand. Can be pushed on
 
 To call a function and return, you can PUSHI $ and $$, then at the end of the function do POP, then do SOR, B, and then do POP, then JMPR, B.
 
-The assembler currently doesn't support ASCII characters. You'll have to use their numeric value.
-
 IMPORTANT: The assembler parses lines by commas. The correct syntax is: [opcode], [operand], [operand] or [opcode], [operand].
 
 ---------- COMPUTER DETAILS ----------
@@ -46,7 +44,7 @@ In all mathematical operations, the first numeric value is register A and the ou
 
 SOI/SOR are still able to be used, but it is recommended to let the assembler take care of second operands.
 
-The emulator is written in C. It has a screen output and planned keyboard input.
+The emulator is written in C. It has a screen output and keyboard input.
 
 The CPU only supports direct addressing. There is only direct addressing and jumping.
 
